@@ -5,7 +5,7 @@
     canvas.height = 769
 
 
-    c.fillStyle = 'red'
+
     c.fillRect(0, 0, canvas.width,canvas.height)
 
     const image =new Image()
@@ -21,38 +21,61 @@
         this.width = 100
         this.height = 100
         this.waypointIndex = 0
+        this.center = {
+            x: this.position.x + this.width / 2,
+            y: this.position.y + this.height / 2
+        }
     }
     draw() {
-        c.fillStyle = 'blue'
+        c.fillStyle = 'red'
         c.fillRect(this.position.x,this.position.y, this.width, this.height)
     }
     update() {
         this.draw()
 
+
         const waypoint = waypoints[this.waypointIndex]
-        const yDistance = waypoint.y - this.position.y
-        const xDistance = waypoint.x - this.position.x
+        const yDistance = waypoint.y - this.center.y
+        const xDistance = waypoint.x - this.center.x
         const angle = Math.atan2(yDistance,xDistance )
         this.position.x += Math.cos(angle)
         this.position.y += Math.sin(angle)
-        console.log(Math.round(this.position.x))
+        this.center = {
+            x: this.position.x + this.width / 2,
+            y: this.position.y + this.height / 2
+        }
 
 
-        if (Math.round(this.position.x) === waypoint.x && this.position.y === waypoint.y) {
+        if (
+            Math.round(this.center.x) === Math.round(waypoint.x) &&
+            Math.round(this.center.y) ===  Math.round(waypoint.y) &&
+            this.waypointIndex < waypoints.length - 1
+        ) {
             this.waypointIndex++
         }
     }
     }
-const enemy = new Enemy({position : {x: 200, y: 400} })
-    const enemy2 = new Enemy({position : {x: 0, y: 400} })
+    const enemies = []
+    for (let i = 0; i < 10; i++) {
+        const xOffset = i * 150
+        enemies.push(
+            new Enemy({
+            position: {x: waypoints[0].x - xOffset, y: waypoints[0].y}
+        })
+        )
+        console.log( waypoints[0].x - xOffset)
+    }
+
 
 
     function animate() {
         requestAnimationFrame(animate)
         c.drawImage(image, 0, 0)
 
-        enemy.update()
-        enemy2.update()
+        enemies.forEach(enemy => {
+            enemy.update()
+        })
+
 
     }
 
