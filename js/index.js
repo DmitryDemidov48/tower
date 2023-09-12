@@ -8,6 +8,46 @@
 
     c.fillRect(0, 0, canvas.width,canvas.height)
 
+
+    const placementTilesData2D = []
+
+    for (let i = 0; i < placementTilesData.length; i += 20) {
+        placementTilesData2D.push(placementTilesData.slice(i, i + 20))
+    }
+
+    class PlacementTile{
+        constructor({position = {x: 0, y: 0 }}) {
+            this.position = position
+            this.size = 64
+            this.color = 'rgba(255,255,255,0.15)'
+        }
+        draw() {
+            c.fillStyle = this.color
+             c.fillRect(this.position.x, this.position.y, this.size, this.size)
+        }
+        update() {
+            this.draw()
+        }
+    }
+    const placementTiles = []
+
+    placementTilesData2D.forEach((row, y) => {
+        row.forEach((symbol, x) => {
+            if (symbol === 14) {
+                placementTiles.push(
+                    new PlacementTile({
+                     position: {
+                         x: x * 64,
+                         y: y * 64
+                     }
+                }))
+
+            }
+        })
+    })
+
+    console.log(placementTiles)
+
     const image =new Image()
     image.onload = () => {
         animate()
@@ -76,6 +116,17 @@
             enemy.update()
         })
 
-
+        placementTiles.forEach((tile) => {
+            tile.draw()
+        })
     }
+
+    const mouse = {
+        x: undefined,
+        y: undefined
+    }
+    addEventListener('mousemove', (event) => {
+        mouse.x = event.clientX
+        mouse.y = event.clientY
+    })
 
