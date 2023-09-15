@@ -60,6 +60,7 @@
     let activeTiles = undefined
     let enemyCount = 3
     let hearts = 10
+    let coins = 100
     spawnEnemies(enemyCount)
     function animate() {
        const animationId = requestAnimationFrame(animate)
@@ -72,6 +73,7 @@
             if (enemy.position.x > canvas.width) {
                 hearts -= 1
                 enemies.splice(i, 1)
+                document.querySelector('#hearts').innerHTML = hearts
                 if (hearts === 0) {
                     cancelAnimationFrame(animationId)
                     document.querySelector('#gameOver').style.display = 'flex'
@@ -117,7 +119,11 @@
                   const enemyIndex = enemies.findIndex((enemy) => {
                         return projectile.enemy === enemy
                     })
-                    if (enemyIndex > -1) enemies.splice(enemyIndex, 1)
+                    if (enemyIndex > -1) {
+                        enemies.splice(enemyIndex, 1)
+                        coins +=25
+                        document.querySelector('#coins').innerHTML = coins
+                    }
                 }
 
                 console.log(projectile.enemy.health)
@@ -134,7 +140,9 @@
     }
 
     canvas.addEventListener('click', (event) => {
-        if (activeTiles && !activeTiles.isOccupied) {
+        if (activeTiles && !activeTiles.isOccupied && coins - 50 >= 0) {
+            coins -= 50
+            document.querySelector('#coins').innerHTML = coins
             buildings.push(new Building({
                 position: {
                     x: activeTiles.position.x,
