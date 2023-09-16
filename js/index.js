@@ -126,7 +126,6 @@
                     }
                 }
 
-                console.log(projectile.enemy.health)
                 building.projectiles.splice(i, 1)
             }
                }
@@ -151,6 +150,9 @@
             })
             )
             activeTiles.isOccupied = true
+            buildings.sort((a, b) => {
+                return a.position.y - b.position.y
+            })
         }
 
     })
